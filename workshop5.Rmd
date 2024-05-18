@@ -1,0 +1,179 @@
+---
+---
+title: "function"
+author: "Messan kodzo AKOTIA"
+date: "2024-05-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#load packages\*\*\*\*
+
+```{r cars}
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, dplyr,here, NHSRdatasets, medicaldata, outbreaks,
+reactable)
+
+```
+
+## create your own function to Function to convert age in years to age in months
+
+```{r}
+years_to_months <- function(age_years) {
+  age_months <- age_years * 12
+  return(age_months)
+}
+```
+
+# create your own function fahrenheit_to_celsuis
+
+```{r}
+fahrenheit_to_celsius <- function(fahrenheit) {
+celsius <- (5 / 9) * (fahrenheit - 32)
+return(celsius)
+}
+fahrenheit_to_celsius(32)
+```
+
+# apply my function
+```{r}
+airquality %>%
+select(Temp) %>%
+mutate(Temp = fahrenheit_to_celsius(Temp)) %>%
+head()
+```
+
+#create your own functioncelsuis_to_fahrenheit
+
+```{r}
+# Function to convert temperature from Celsius to Fahrenheit
+celsius_to_fahrenheit <- function(temperature_celsius) {
+  temperature_fahrenheit <- temperature_celsius * 1.8 + 32
+  return(temperature_fahrenheit)
+}
+```
+
+#test our own function
+
+```{r}
+library(datasets)
+beaver1 %>%
+select(temp) %>%mutate(temp = celsius_to_fahrenheit(temp))%>%
+  head()
+```
+
+# functions with Multiples arguments
+
+```{r}
+calc_bmi <- function(weight_kg, Height) { Height_m <- Height/100
+  bmi <- weight_kg / (Height_m^2)
+  return(bmi)
+}
+```
+
+#apply my function
+```{r}
+medicaldata::smartpill %>%
+as_tibble() %>%
+select(Weight, Height) %>%
+mutate(BMI = calc_bmi(Weight, Height))
+```
+
+## practice with Calculate calories
+
+```{r}
+calculate_calories <- function(carb_grams = 0, protein_grams = 0, fat_grams = 0) {
+  result <- (carb_grams * 4) + (protein_grams * 4) + (fat_grams * 9)
+ result_rounded <- round(result, 2)
+  return(result_rounded)
+}
+
+```
+
+## an example
+
+```{r}
+calculate_calories(carb_grams = 50.45, protein_grams = 20.67, fat_grams = 10.9087)
+
+```
+
+# practices to celsius_ convert
+```{r}
+celsius_convert <- function(temp, unit) {
+  if (unit == "celsius") {
+    return(temp)
+  } else if (unit == "fahrenheit") {
+    return((temp - 32) / 1.8)
+  } else {
+    stop("Invalid unit provided. Please use 'celsius' or 'fahrenheit'.")
+  }
+}
+```
+
+#checking error
+
+```{r}
+print(celsius_convert(20, "celsius")) 
+print(celsius_convert(68, "fahrenheit")) 
+```
+
+##correct function
+```{r}
+check_negatives <- function(numbers) {
+  if (any(numbers < 0)) {
+    print("x contient des nombres négatifs")
+  } else {
+    print("x ne contient pas de nombres négatifs")
+  }
+}
+```
+
+#check functionnality of the function cheeck_negatives
+```{r}
+test1<- check_negatives(c(8, 3, -2, 5)) 
+test2<- check_negatives(c(10, 20, 30, 40))
+```
+#Argument validityChecking with Conditionals
+```{r}
+calculate_calories2 <- function(carb_grams = 0, protein_grams = 0, fat_grams = 0) {
+  if (!is.numeric(carb_grams) || !is.numeric(protein_grams) || !is.numeric(fat_grams)) {
+    stop("All input arguments must be numeric.")
+  }
+  result <- (carb_grams * 4) + (protein_grams * 4) + (fat_grams * 9)
+  
+  return(result)
+}
+print(calculate_calories2(30, 20, 10))
+
+#create and check error
+print(calculate_calories2(30,"20", 10))
+
+```
+
+
+# Vectorized Conditionals
+```{r}
+calculate_isoniazid_dosage2 <- function(weight) {
+  if (any(weight < 30)) stop("Weights must all be at least 30 kg.")
+  
+  # Calculer le dosage en fonction du poids
+  out <- ifelse(weight <= 35, 150,
+           ifelse(weight <= 45, 200,
+             ifelse(weight <= 55, 300,
+               ifelse(weight <= 70, 300, 300))))
+  
+  return(out)
+}
+
+# checking function
+calculate_isoniazid_dosage2(c(30, 40, 50, 100))
+
+```
+
+```{r}
+
+```
+
